@@ -5,12 +5,7 @@ import time
 import mysql.connector
 from mysql.connector import Error
 
-exchange_dic = {}
-Time = []
-Item = []
-Price_buy = []
-Price_sell = []
- 
+
 
 def main():    
     my_header = {
@@ -23,20 +18,18 @@ def main():
 
     # Get USD item (按照台銀頁面順序美金是0，港幣是1，以此類推)
     data_name = soup.find_all('div','hidden-phone print_show')
-    #print(data_name[0].text.strip())
     name = data_name[0].text.strip()
-    #Item.append(name)
+    
 
     # Get price 
     data_price = soup.find_all('td','rate-content-sight text-right print_hide')
     # 美金 即期買入=data_price[0], 賣出=data_price[1]
     # 若是港幣 即期買入=data_price[2], 賣出=data_price[3]
-    # print('本行即期賣出:',data_price[1].text) 本行即期賣出
+
 
     buying_price = float(data_price[1].text)
     selling_price = float(data_price[0].text)
-    #Price_buy.append(buying_price)
-    #Price_sell.append(selling_price)
+
     
     #賣出的價差
     result = selling_price - buying_price
@@ -50,15 +43,7 @@ def main():
 
     # Get time
     current_time =  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    #Time.append(current_time)
-    
-    #exchange_dic['Time'] =  Time[0]
-    #exchange_dic['Item'] = Item[0]
-    #exchange_dic['Price_buy'] = Price_buy[0]
-    #exchange_dic['Price_sell'] = Price_sell[0]
-    #print(exchange_dic)
    
-    #USD_info = (exchange_dic['Time'],exchange_dic['Item'],exchange_dic['Price_buy'],exchange_dic['Price_sell'],price_GAP)   
     USD_info = (current_time,name,buying_price,selling_price,price_GAP)
     print(USD_info)
     Write_to_csv(USD_info)
